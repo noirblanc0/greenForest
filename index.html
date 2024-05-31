@@ -19,11 +19,9 @@
     </div>
     <div id="content-container" style="display:none;">
         <h2>Protected Content</h2>
-        <button onclick="logout()">Logout</button>
         <p>Hello World</p>
         <!-- Your additional content here -->
-            
-        <!-- Add more content as needed -->
+        <button id="logout-btn">Logout</button>
     </div>
 
     <script>
@@ -31,9 +29,13 @@
         const passwordInput = document.getElementById("password");
         const errorMessage = document.getElementById("error-message");
         const submitButton = document.getElementById("submit-btn");
+        const logoutButton = document.getElementById("logout-btn");
+        const loginContainer = document.getElementById("login-container");
+        const contentContainer = document.getElementById("content-container");
 
         submitButton.addEventListener('click', checkPassword);
         passwordInput.addEventListener('input', clearErrorMessage);
+        logoutButton.addEventListener('click', logout);
 
         function checkPassword() {
             if (passwordInput.value === correctPassword) {
@@ -48,8 +50,13 @@
             errorMessage.textContent = "";
         }
 
-        const loginContainer = document.getElementById("login-container");
-        const contentContainer = document.getElementById("content-container");
+        function logout() {
+            // Reset the page to display the login prompt
+            loginContainer.style.display = "block";
+            contentContainer.style.display = "none";
+            clearErrorMessage();
+            passwordInput.value = ""; // Clear the password input field
+        }
     </script>
 </body>
 </html>
