@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Protected Page</title>
+    <style>
+        #error-message {
+            color: red;
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
-    <p>hello</p>
     <div id="login-container">
         <h2>Enter Password</h2>
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="checkPassword()">Submit</button>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="submit-btn">Submit</button>
         <p id="error-message"></p>
     </div>
     <div id="content-container" style="display:none;">
@@ -19,20 +26,31 @@
         <img src="image.jpg" alt="Image">
         <!-- Add more content as needed -->
     </div>
+
     <script>
         const correctPassword = "yourpassword";
+        const passwordInput = document.getElementById("password");
+        const errorMessage = document.getElementById("error-message");
+        const submitButton = document.getElementById("submit-btn");
+
+        submitButton.addEventListener('click', checkPassword);
+        passwordInput.addEventListener('input', clearErrorMessage);
 
         function checkPassword() {
-            const passwordInput = document.getElementById("password").value;
-            const errorMessage = document.getElementById("error-message");
-
-            if (passwordInput === correctPassword) {
-                document.getElementById("login-container").style.display = "none";
-                document.getElementById("content-container").style.display = "block";
+            if (passwordInput.value === correctPassword) {
+                loginContainer.style.display = "none";
+                contentContainer.style.display = "block";
             } else {
                 errorMessage.textContent = "Incorrect password. Please try again.";
             }
         }
+
+        function clearErrorMessage() {
+            errorMessage.textContent = "";
+        }
+
+        const loginContainer = document.getElementById("login-container");
+        const contentContainer = document.getElementById("content-container");
     </script>
 </body>
 </html>
