@@ -2,9 +2,37 @@
 <html lang="en">
 <head>
     <title>Password Protected Page</title>
-    <input>
 </head>
 <body>
-<p>hi</p>
+    <p>hello</p>
+    <div id="login-container">
+        <h2>Enter Password</h2>
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="checkPassword()">Submit</button>
+        <p id="error-message"></p>
+    </div>
+    <div id="content-container" style="display:none;">
+        <h2>Protected Content</h2>
+        <p>Hello World</p>
+        <!-- Your additional content here -->
+        <a href="#">Link</a>
+        <img src="image.jpg" alt="Image">
+        <!-- Add more content as needed -->
+    </div>
+    <script>
+        const correctPassword = "yourpassword";
+
+        function checkPassword() {
+            const passwordInput = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (passwordInput === correctPassword) {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("content-container").style.display = "block";
+            } else {
+                errorMessage.textContent = "Incorrect password. Please try again.";
+            }
+        }
+    </script>
 </body>
 </html>
