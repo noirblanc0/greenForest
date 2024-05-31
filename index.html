@@ -8,6 +8,9 @@
         #error-message {
             color: red;
         }
+        #notes-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -19,8 +22,11 @@
     </div>
     <div id="content-container" style="display:none;">
         <h2>Protected Content</h2>
-        <p>Hello World</p>
-        <!-- Your additional content here -->
+        <div id="notes-container">
+            <h3>Notes</h3>
+            <textarea id="note-input" rows="4" cols="50"></textarea>
+            <button id="save-note-btn">Save Note</button>
+        </div>
         <button id="logout-btn">Logout</button>
     </div>
 
@@ -32,15 +38,32 @@
         const logoutButton = document.getElementById("logout-btn");
         const loginContainer = document.getElementById("login-container");
         const contentContainer = document.getElementById("content-container");
+        const noteInput = document.getElementById("note-input");
+        const saveNoteButton = document.getElementById("save-note-btn");
+
+        // Check if user is already logged in
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+        if (isLoggedIn === "true") {
+            loginContainer.style.display = "none";
+            contentContainer.style.display = "block";
+            loadNote(); // Load saved note if available
+        }
 
         submitButton.addEventListener('click', checkPassword);
         passwordInput.addEventListener('input', clearErrorMessage);
         logoutButton.addEventListener('click', logout);
+        saveNoteButton.addEventListener('click', saveNote);
+
+        // Load saved note on page load
+        window.addEventListener('load', loadNote);
 
         function checkPassword() {
             if (passwordInput.value === correctPassword) {
+                localStorage.setItem("isLoggedIn", "true");
                 loginContainer.style.display = "none";
                 contentContainer.style.display = "block";
+                loadNote(); // Load saved note if available
             } else {
                 errorMessage.textContent = "Incorrect password. Please try again.";
             }
@@ -51,11 +74,27 @@
         }
 
         function logout() {
+            // Clear the logged-in state
+            localStorage.removeItem("isLoggedIn");
+            
             // Reset the page to display the login prompt
             loginContainer.style.display = "block";
             contentContainer.style.display = "none";
             clearErrorMessage();
             passwordInput.value = ""; // Clear the password input field
+        }
+
+        function saveNote() {
+            const note = noteInput.value;
+            localStorage.setItem("note", note);
+            alert("Note saved successfully!");
+        }
+
+        function loadNote() {
+            const savedNote = localStorage.getItem("note");
+            if (savedNote) {
+                noteInput.value = savedNote;
+            }
         }
     </script>
 </body>
