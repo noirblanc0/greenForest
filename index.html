@@ -5,24 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Protected Page</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
         #error-message {
             color: red;
         }
-        #notes-container {
-            margin-top: 20px;
-        }
         #content-container {
             display: flex;
+            height: 100vh;
         }
-        #notes-container,
+        #notes-container {
+            flex: 1;
+            padding: 20px;
+        }
         #iframe-container {
             flex: 1;
-            margin-right: 20px;
+            position: relative;
+            overflow: hidden;
         }
         iframe {
             width: 100%;
             height: 100%;
             border: none;
+        }
+        #popup-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+        }
+        .popup-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .popup-icon:hover {
+            background-color: #2980b9;
+        }
+        #login-popup,
+        #message-popup {
+            display: none;
+        }
+        #login-popup input[type="password"],
+        #message-popup input[type="text"] {
+            margin-bottom: 10px;
+            width: calc(100% - 20px);
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #message-popup textarea {
+            margin-bottom: 10px;
+            width: calc(100% - 20px);
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #message-popup input[type="button"] {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        #message-popup input[type="button"]:hover {
+            background-color: #2980b9;
+        }
+        #inquiries {
+            display: none;
         }
     </style>
 </head>
@@ -36,15 +100,32 @@
     <div id="content-container" style="display:none;">
         <div id="notes-container">
             <h2>Protected Content</h2>
-            <div id="notes-container">
+            <div id="notes">
                 <h3>Notes</h3>
-                <textarea id="note-input" rows="4" cols="50"></textarea>
+                <textarea id="note-input" rows="4" cols="30"></textarea>
                 <button id="save-note-btn">Save Note</button>
             </div>
             <button id="logout-btn">Logout</button>
         </div>
         <div id="iframe-container">
             <iframe id="myFrame" src="https://www.example.com"></iframe>
+            <div id="popup-container">
+                <div class="popup-icon" id="login-icon">🔒</div>
+                <div class="popup-icon" id="message-icon">💬</div>
+                <div id="login-popup">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button id="login-submit-btn">Login</button>
+                </div>
+                <div id="message-popup">
+                    <input type="text" id="message-email" placeholder="Your Email" required>
+                    <textarea id="message-text" rows="4" cols="20" placeholder="Type your message here" required></textarea>
+                    <input type="button" id="send-message-btn" value="Send">
+                </div>
+                <div id="inquiries">
+                    <h3>Inquiries</h3>
+                    <ul id="inquiries-list"></ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -61,10 +142,17 @@
         const contentContainer = document.getElementById("content-container");
         const noteInput = document.getElementById("note-input");
         const saveNoteButton = document.getElementById("save-note-btn");
+        const loginPopup = document.getElementById("login-popup");
+        const loginSubmitButton = document.getElementById("login-submit-btn");
+        const messagePopup = document.getElementById("message-popup");
+        const sendMessageButton = document.getElementById("send-message-btn");
+        const inquiriesList = document.getElementById("inquiries-list");
 
         submitButton.addEventListener('click', checkPassword);
         logoutButton.addEventListener('click', logout);
         saveNoteButton.addEventListener('click', saveNote);
+        loginSubmitButton.addEventListener('click', checkLoginPassword);
+        sendMessageButton.addEventListener('click', sendMessage);
 
         // Load saved note on page load
         window.addEventListener('load', loadNote);
@@ -109,6 +197,43 @@
                 }
             }
         }
+
+        function checkLoginPassword() {
+            const password = document.getElementById("login-password").value;
+            const user = users.find(u => u.password === password);
+            if (user) {
+                loginPopup.style.display = "none";
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        }
+
+        function sendMessage() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            if (!currentUser) {
+                alert("Please login first.");
+                return;
+            }
+            const email = document.getElementById("message-email").value;
+            const message = document.getElementById("message-text").value;
+            // Here you can implement the email sending functionality
+            // For now, let's just display the message in the inquiries list
+            const li = document.createElement("li");
+            li.textContent = `${email}: ${message}`;
+            inquiriesList.appendChild(li);
+        }
+
+        document.getElementById("login-icon").addEventListener("click", function() {
+            loginPopup.style.display = "block";
+            messagePopup.style.display = "none";
+            inquiries.style.display = "none";
+        });
+
+        document.getElementById("message-icon").addEventListener("click", function() {
+            messagePopup.style.display = "block";
+            loginPopup.style.display = "none";
+            inquiries.style.display = "none";
+        });
     </script>
 </body>
 </html>
