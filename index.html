@@ -80,10 +80,11 @@ body, html {height: 100%; margin: 0;} /* Removed margin for better centering */
 }
 </style>
 <script>
-window.onload = function() {
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-}
+// Clear fields on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+        });
 function validateLogin() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
