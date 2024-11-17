@@ -80,11 +80,13 @@ body, html {height: 100%; margin: 0;} /* Removed margin for better centering */
 }
 </style>
 <script>
-// Clear fields on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
-        });
+window.onload = function() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+}
+   window.onload = function() {
+        document.getElementById('loginForm').reset(); // Reset the form
+    }
 function validateLogin() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -128,9 +130,9 @@ function closeModal(modalId) {
   <div class="w3-display-middle w3-padding">
     <div class="login-container">
       <h2>Login</h2>
-      <form onsubmit="validateLogin()" autocomplete="off"> <!-- Simplified form submission -->
-     <input type="text" id="username" placeholder="Username" autocomplete="off" required>
-     <input type="password" id="password" placeholder="Password" autocomplete="off" required>
+      <form id="loginForm" onsubmit="validateLogin()" autocomplete="off return false;"> <!-- Simplified form submission -->
+     <input type="text" id="username" placeholder="Username" autocomplete="new-username" required>
+     <input type="password" id="password" placeholder="Password" autocomplete="new-password" required>
       <button type="submit">Login</button>
       <p id="error-message" style="color: red;"></p>
       </form>
